@@ -1,0 +1,146 @@
+
+
+CREATE TABLE `addtobasket` (
+  `idaddtobasket` int NOT NULL AUTO_INCREMENT,
+  `itemmid` int NOT NULL,
+  `idbasket` int NOT NULL,
+  PRIMARY KEY (`idaddtobasket`),
+  KEY `basketid_idx` (`idbasket`),
+  KEY `itemmid` (`itemmid`),
+  CONSTRAINT `baskettid` FOREIGN KEY (`idbasket`) REFERENCES `basket` (`idbasket`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `itemmid` FOREIGN KEY (`itemmid`) REFERENCES `item` (`iditem`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+
+CREATE TABLE `approve` (
+  `idapprove` int NOT NULL AUTO_INCREMENT,
+  `idItem` int NOT NULL,
+  `address` varchar(80) NOT NULL,
+  `status` varchar(45) NOT NULL,
+  PRIMARY KEY (`idapprove`),
+  KEY `idItem_idx` (`idItem`),
+  KEY `address_idx` (`address`),
+  CONSTRAINT `address` FOREIGN KEY (`address`) REFERENCES `user` (`address`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `iditemm` FOREIGN KEY (`idItem`) REFERENCES `item` (`iditem`) ON DELETE CASCADE ON UPDATE CASCADE
+)
+
+
+
+
+CREATE TABLE `basket` (
+  `idbasket` int NOT NULL AUTO_INCREMENT,
+  `items` varchar(45) NOT NULL,
+  `totalprice` double NOT NULL,
+  PRIMARY KEY (`idbasket`)
+) 
+
+
+CREATE TABLE `campaign` (
+  `idcampaign` int NOT NULL AUTO_INCREMENT,
+  `items` varchar(80) NOT NULL,
+  `address` varchar(80) NOT NULL,
+  PRIMARY KEY (`idcampaign`),
+  KEY `address_idx` (`address`),
+  CONSTRAINT `addreess` FOREIGN KEY (`address`) REFERENCES `user` (`address`) ON DELETE CASCADE ON UPDATE CASCADE
+) 
+
+
+CREATE TABLE `checkout` (
+  `idcheckout` int NOT NULL AUTO_INCREMENT,
+  `idbasket` int NOT NULL,
+  `idorder` int NOT NULL,
+  `payment` double NOT NULL,
+  PRIMARY KEY (`idcheckout`),
+  KEY `idbasket_idx` (`idbasket`),
+  KEY `idorder_idx` (`idorder`),
+  CONSTRAINT `basketid` FOREIGN KEY (`idbasket`) REFERENCES `basket` (`idbasket`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `idorder` FOREIGN KEY (`idorder`) REFERENCES `order` (`idorder`) ON DELETE CASCADE ON UPDATE CASCADE
+) 
+
+
+CREATE TABLE `comment` (
+  `idcomment` int NOT NULL AUTO_INCREMENT,
+  `iditem` int NOT NULL,
+  `idapprove` int NOT NULL,
+  `Address` varchar(80) NOT NULL,
+  `approvestatus` int DEFAULT '0',
+  PRIMARY KEY (`idcomment`),
+  KEY `IdItem_idx` (`iditem`),
+  KEY `Address_idx` (`Address`),
+  KEY `idapprove_idx` (`idapprove`),
+  CONSTRAINT `addresss` FOREIGN KEY (`Address`) REFERENCES `user` (`address`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `idapprove` FOREIGN KEY (`idapprove`) REFERENCES `approve` (`idapprove`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `itemmmid` FOREIGN KEY (`iditem`) REFERENCES `item` (`iditem`) ON DELETE CASCADE ON UPDATE CASCADE
+) 
+
+
+CREATE TABLE `createitem` (
+  `idcreateItem` int NOT NULL AUTO_INCREMENT,
+  `userAddress` varchar(80) NOT NULL,
+  `iditem` int NOT NULL,
+  PRIMARY KEY (`idcreateItem`),
+  KEY `userAddress_idx` (`userAddress`),
+  KEY `iditem_idx` (`iditem`),
+  CONSTRAINT `iditem` FOREIGN KEY (`iditem`) REFERENCES `item` (`iditem`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `userAddress` FOREIGN KEY (`userAddress`) REFERENCES `user` (`address`) ON DELETE CASCADE ON UPDATE CASCADE
+) 
+
+
+CREATE TABLE `invoice` (
+  `idinvoice` int NOT NULL AUTO_INCREMENT,
+  `address` varchar(80) NOT NULL,
+  `idbasket` int NOT NULL,
+  PRIMARY KEY (`idinvoice`),
+  KEY `adddress_idx` (`address`),
+  KEY `idbaskett_idx` (`idbasket`),
+  CONSTRAINT `adddress` FOREIGN KEY (`address`) REFERENCES `user` (`address`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `idbaskett` FOREIGN KEY (`idbasket`) REFERENCES `basket` (`idbasket`) ON DELETE CASCADE ON UPDATE CASCADE
+) 
+
+
+CREATE TABLE `item` (
+  `iditem` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `description` varchar(45) NOT NULL,
+  `idcreateitem` int NOT NULL,
+  `price` double NOT NULL,
+  `amount` int NOT NULL,
+  `comment` varchar(45) NOT NULL,
+  PRIMARY KEY (`iditem`),
+  KEY `idcreateitem_idx` (`idcreateitem`),
+  CONSTRAINT `idcreateitem` FOREIGN KEY (`idcreateitem`) REFERENCES `createitem` (`idcreateItem`) ON DELETE CASCADE ON UPDATE CASCADE
+) 
+
+
+CREATE TABLE `order` (
+  `idorder` int NOT NULL AUTO_INCREMENT,
+  `idbasket` int NOT NULL,
+  `status` varchar(45) NOT NULL,
+  PRIMARY KEY (`idorder`),
+  KEY `idbasket_idx` (`idbasket`),
+  CONSTRAINT `idbasket` FOREIGN KEY (`idbasket`) REFERENCES `basket` (`idbasket`) ON DELETE CASCADE ON UPDATE CASCADE
+) 
+
+
+CREATE TABLE `search` (
+  `idsearch` int NOT NULL AUTO_INCREMENT,
+  `useraddress` varchar(80) NOT NULL,
+  `iditem` int NOT NULL,
+  `description` varchar(45) NOT NULL,
+  PRIMARY KEY (`idsearch`),
+  KEY `userAddress_idx` (`useraddress`),
+  KEY `iditem_idx` (`iditem`),
+  CONSTRAINT `adressuser` FOREIGN KEY (`useraddress`) REFERENCES `user` (`address`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `itemid` FOREIGN KEY (`iditem`) REFERENCES `item` (`iditem`) ON DELETE CASCADE ON UPDATE CASCADE
+) 
+
+
+CREATE TABLE `user` (
+  `address` varchar(80) NOT NULL,
+  `name` varchar(45) NOT NULL,
+  `password` varchar(45) NOT NULL,
+  `email` varchar(45) NOT NULL,
+  `type` varchar(45) NOT NULL,
+  PRIMARY KEY (`address`)
